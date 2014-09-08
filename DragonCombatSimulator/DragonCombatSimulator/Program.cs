@@ -20,14 +20,14 @@ namespace DragonCombatSimulator
             Greet();
 
             //loop while game is on
-            while (won == false)
+            while (won == false) 
             {
                 Console.WriteLine("\nIt's your turn now");
 
                 PlayersHit(PlayersChoice()); //Function call for Play's Hit
                 PrintResults(); //Function call to print results after player's Hit
 
-                if (won == false)
+                if (won == false) 
                 {
                     Console.WriteLine("\nIt's Dragon's turn now");
                     DragonsHit(); //Function call for Dragon's Hit
@@ -42,12 +42,12 @@ namespace DragonCombatSimulator
             player = Console.ReadLine();
 
             Console.WriteLine("\nWelcome to DRAGON HIT, " +player);
-            Console.WriteLine("\nPress enter to skip the introduction \n or type \"yes\" for the introduction:");
+            Console.WriteLine("\ntype \"HELP\" for the introduction \n or Press enter to skip the introduction:");
             string temp = Console.ReadLine();
 
             if (temp == "")
                 return;
-            else if(temp.ToLower() == "yes")
+            else if(temp.ToLower() == "help")
             {
                 Console.WriteLine(@"
 THE STORY: There once was kingdom full of riches. 
