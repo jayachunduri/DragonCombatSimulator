@@ -13,6 +13,7 @@ namespace DragonCombatSimulator
         static int playerHP = 100, dragonHP = 200;
         static string player;
         static bool won = false;
+        static int score = 0;
 
         static void Main(string[] args)
         {
@@ -34,6 +35,11 @@ namespace DragonCombatSimulator
                     PrintResults(); //Function call to print results after dragon's Hit
                 }
             }
+            Console.WriteLine("Press Enter to see high scores");
+            Console.ReadKey();
+
+            AddToDataBase();
+            DisplayInfoFromDB();
         }
 
         static void Greet()
@@ -114,7 +120,8 @@ Enter 3 for Heal
                     if (hit <= 70) //user got a hit
                     {
                         //Decrease Dragon's HP points from 20 - 25
-                        dragonHP = dragonHP - (rng.Next(20, 26));
+                        score += rng.Next(20, 26);
+                        dragonHP = dragonHP - score;
                         Console.WriteLine("Congrats you got a hit!");
                     }
                     else //user missed it
@@ -124,7 +131,8 @@ Enter 3 for Heal
                     break;
 
                 case 2: //user selected the fire ball
-                    dragonHP = dragonHP - (rng.Next(10, 16));
+                    score = rng.Next(10, 16);
+                    dragonHP = dragonHP - score;
                     break;
                 case 3: //user selected heal
                     if (playerHP == 100)
@@ -186,6 +194,42 @@ Enter 3 for Heal
             Console.WriteLine("\nPress Enter to continue\n\n");
             Console.ReadKey(); //this will keep console window open, so that user can read the details after hit
             return;
+        }
+
+        //Add score to the data base
+        static void AddToDataBase()
+        {
+            HighScore currentScore = new HighScore();
+
+            currentScore.Game = "Dragon Combat V1";
+            currentScore.Name = player;
+            currentScore.Score = score;
+            currentScore.DateCreated = DateTime.Now;
+
+            //connection to data base
+            JayaEntities db = new JayaEntities();
+
+            db.HighScores.Add(currentScore);
+
+            db.SaveChanges();
+
+        }
+
+        //Display high scores from the data base
+        static void DisplayInfoFromDB()
+        {
+            JayaEntities db = new JayaEntities();
+
+            Console.Clear();
+            Console.WriteLine("Dragon Combat Version 1 High Scores");
+            Console.WriteLine("====================================");
+
+            List<HighScore> highScoreList = db.HighScores.Where(x => x.Game == "Dragon Combat V1").OrderByDescending(x => x.Score).Take(10).ToList();
+
+            foreach (var item in highScoreList)
+            {
+                Console.WriteLine("{0}, {1}  {2}", highScoreList.IndexOf(item) + 1, item.Name, item.Score);
+            }
         }
 
     }
